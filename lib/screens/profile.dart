@@ -1,30 +1,18 @@
+import 'package:closetalk/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  bool isInit = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
     return Scaffold(
-      key: const Key('profile'),
-      body: Container(),
+      key: const Key('home'),
+      body: Obx(
+        () => Text(userController.currentUser.value.name ?? 'test'),
+      ),
     );
   }
 }

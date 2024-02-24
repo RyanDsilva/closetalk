@@ -1,30 +1,18 @@
+import 'package:closetalk/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  bool isInit = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
     return Scaffold(
-      key: const Key('chat'),
-      body: Container(),
+      key: const Key('home'),
+      body: Obx(
+        () => Text(userController.currentUser.value.name ?? 'test'),
+      ),
     );
   }
 }

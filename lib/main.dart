@@ -3,6 +3,7 @@ import 'package:closetalk/models/chat_message.dart';
 import 'package:closetalk/models/group_chat.dart';
 import 'package:closetalk/models/user.dart';
 import 'package:closetalk/screens/chat.dart';
+import 'package:closetalk/screens/discover.dart';
 import 'package:closetalk/screens/global_chat.dart';
 import 'package:closetalk/screens/home.dart';
 import 'package:closetalk/screens/profile.dart';
@@ -22,9 +23,10 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/profile',
       getPages: [
         GetPage(name: '/', page: () => const HomeScreen()),
+        GetPage(name: '/discover', page: () => const DiscoverScreen()),
         GetPage(name: '/profile', page: () => const ProfileScreen()),
         GetPage(name: '/chat', page: () => const ChatScreen()),
         GetPage(name: '/global_chat', page: () => const GlobalChatScreen()),
