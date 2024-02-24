@@ -23,13 +23,33 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/profile',
+      initialRoute: '/',
       getPages: [
-        GetPage(name: '/', page: () => const HomeScreen()),
-        GetPage(name: '/discover', page: () => const DiscoverScreen()),
-        GetPage(name: '/profile', page: () => const ProfileScreen()),
-        GetPage(name: '/chat', page: () => const ChatScreen()),
-        GetPage(name: '/global_chat', page: () => const GlobalChatScreen()),
+        GetPage(
+          name: '/',
+          page: () => const HomeScreen(),
+          transition: Transition.topLevel,
+        ),
+        GetPage(
+          name: '/discover',
+          page: () => const DiscoverScreen(),
+          transition: Transition.topLevel,
+        ),
+        GetPage(
+          name: '/profile',
+          page: () => const ProfileScreen(),
+          transition: Transition.topLevel,
+        ),
+        GetPage(
+          name: '/chat',
+          page: () => const ChatScreen(),
+          transition: Transition.fade,
+        ),
+        GetPage(
+          name: '/global_chat',
+          page: () => const GlobalChatScreen(),
+          transition: Transition.fade,
+        ),
       ],
     ),
   );

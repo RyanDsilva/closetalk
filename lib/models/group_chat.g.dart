@@ -8,7 +8,7 @@ part of 'group_chat.dart';
 
 class GroupChatAdapter extends TypeAdapter<GroupChat> {
   @override
-  final int typeId = 3;
+  final int typeId = 4;
 
   @override
   GroupChat read(BinaryReader reader) {

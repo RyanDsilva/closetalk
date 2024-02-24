@@ -9,7 +9,7 @@ import 'package:hive/hive.dart';
 
 part 'group_chat.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 4)
 class GroupChat {
   @HiveField(0)
   List<ChatMessage>? messages;
