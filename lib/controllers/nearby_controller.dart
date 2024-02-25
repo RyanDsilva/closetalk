@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:closetalk/controllers/device_info.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:get/get.dart';
@@ -11,15 +12,7 @@ class NearbyServiceController extends GetxController {
   Future<void> initializeNearby() async {
     nearbyService = NearbyService();
     String deviceID = '';
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (GetPlatform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      deviceID = androidInfo.model;
-    }
-    if (GetPlatform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceID = iosInfo.utsname.machine;
-    }
+    deviceID = await getDeviceInfo();
     await nearbyService.init(
       serviceType: 'closetalk',
       deviceName: deviceID,
