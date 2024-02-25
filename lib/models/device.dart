@@ -1,0 +1,1 @@
+enum DeviceType { advertiser, browser }
