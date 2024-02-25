@@ -30,7 +30,7 @@
 	<string>Uses Bluetooth to use the Multipeer Connectivity to connect and exchange messages with nearby devices</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>dev_closetalk._tcp</string>
+		<string>closetalk._tcp</string>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

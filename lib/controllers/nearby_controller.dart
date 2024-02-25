@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class NearbyServiceController extends GetxController {
   late NearbyService nearbyService;
-  late StreamSubscription receivedDataSubscription;
+  // late StreamSubscription receivedDataSubscription;
 
   Future<void> initializeNearby() async {
     nearbyService = NearbyService();
@@ -21,7 +21,7 @@ class NearbyServiceController extends GetxController {
       deviceID = iosInfo.utsname.machine;
     }
     await nearbyService.init(
-      serviceType: 'dev_closetalk',
+      serviceType: 'closetalk',
       deviceName: deviceID,
       strategy: Strategy.P2P_CLUSTER,
       callback: (isRunning) async {
@@ -37,7 +37,7 @@ class NearbyServiceController extends GetxController {
   }
 
   Future<void> disposeResources() async {
-    receivedDataSubscription.cancel();
+    // receivedDataSubscription.cancel();
     nearbyService.stopBrowsingForPeers();
     nearbyService.stopAdvertisingPeer();
     update();
