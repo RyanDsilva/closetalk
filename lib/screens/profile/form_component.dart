@@ -30,8 +30,6 @@ class _FormComponentState extends State<FormComponent> {
     return menuItems;
   }
 
-  final bool _validate = false;
-
   void _changeAvatar(BuildContext context) {
     showDialog(
       context: context,
