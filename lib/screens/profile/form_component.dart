@@ -69,6 +69,14 @@ class _FormComponentState extends State<FormComponent> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    nameController.text = userController.currentUser.value.name ?? '';
+    introductionController.text =
+        userController.currentUser.value.introduction ?? '';
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     introductionController.dispose();
