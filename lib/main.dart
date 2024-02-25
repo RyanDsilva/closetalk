@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:closetalk/constants/colors.dart';
+import 'package:closetalk/controllers/user_controller.dart';
 import 'package:closetalk/models/chat.dart';
 import 'package:closetalk/models/chat_message.dart';
 import 'package:closetalk/models/group_chat.dart';
@@ -8,7 +9,7 @@ import 'package:closetalk/screens/chat.dart';
 import 'package:closetalk/screens/discover.dart';
 import 'package:closetalk/screens/global_chat.dart';
 import 'package:closetalk/screens/home.dart';
-import 'package:closetalk/screens/profile.dart';
+import 'package:closetalk/screens/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -39,13 +40,16 @@ void main() async {
   Hive.registerAdapter(ChatMessageAdapter());
   Hive.registerAdapter(ChatAdapter());
   Hive.registerAdapter(GroupChatAdapter());
+  // await Hive.deleteFromDisk();
   await Hive.openBox<User>('user');
   await Hive.openBox<Chat>('chats');
-  await Hive.openBox('group_chats');
+  await Hive.openBox<GroupChat>('group_chats');
+  final userController = Get.put<UserController>(UserController());
+  debugPrint(userController.currentUser.value.toString());
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: userController.isCurrentUserSet.value == true ? '/' : '/profile',
       getPages: [
         GetPage(
           name: '/',
