@@ -10,11 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_nearby_connections: ^1.1.2
+  flutter_scatter: ^0.2.0
   get: ^4.6.6
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   marquee: ^2.2.3
   path_provider: ^2.1.2
+  pulsator: ^1.0.0+2
 
 dev_dependencies:
   build_runner: ^2.4.8

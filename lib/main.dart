@@ -23,7 +23,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/discover',
       getPages: [
         GetPage(
           name: '/',
