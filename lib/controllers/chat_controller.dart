@@ -47,10 +47,9 @@ class ChatController extends GetxController {
 
   Future<void> addMessageToConversation(
       String message, User owner, String chatId) async {
-    final chat = chats[chatId];
     final m = ChatMessage(text: message, owner: owner);
-    chat?.messages?.add(m);
-    update();
-    await db.put(chatId, chat!);
+    chats[chatId]?.messages?.add(m);
+    chats.refresh();
+    await db.put(chatId, chats[chatId]!);
   }
 }

@@ -102,20 +102,49 @@ class _FormComponentState extends State<FormComponent> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RandomAvatar(
-              selectedAvatar,
-              height: 50,
-              width: 50,
-            ),
-            TextButton(
-              onPressed: () => _changeAvatar(context),
-              child: const Text(
-                'Change Avatar',
-                style: TextStyle(
-                  color: apnaMaroon,
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: RandomAvatar(
+                    selectedAvatar,
+                    height: 50,
+                    width: 50,
+                  ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () {
+                    _changeAvatar(context);
+                  },
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        color: apnaBlack.withOpacity(0.75),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 12,
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
+            // TextButton(
+            //   onPressed: () => _changeAvatar(context),
+            //   child: const Text(
+            //     'Change Avatar',
+            //     style: TextStyle(
+            //       color: apnaMaroon,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
         TextFormField(

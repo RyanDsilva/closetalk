@@ -103,7 +103,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w200,
                             fontSize: 18,
-                            color: apnaBlack.withOpacity(0.35),
+                            color: apnaMaroon.withOpacity(0.35),
                           ),
                           textDirection: TextDirection.rtl,
                           scrollAxis: Axis.horizontal,

@@ -26,12 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Uses Bluetooth to use the Multipeer Connectivity to connect and exchange messages with nearby devices</string>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>closetalk._tcp</string>
+		<string>_closetalk._tcp</string>
 	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Uses Bluetooth to use the Multipeer Connectivity to connect and exchange messages with nearby devices</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

@@ -88,13 +88,13 @@ class NearbyServiceController extends GetxController {
       triggerNotificationAndCreateUsers(devices, devicesList);
       devices.clear();
       devices.addAll(devicesList);
-      receivedDataSubscription =
-          nearbyService.dataReceivedSubscription(callback: (data) async {
-        debugPrint(data.toString());
-        final parts = parseMessageType(data['message']);
-        await performAction(parts[0], parts[1], data['senderDeviceId']);
-      });
       update();
+    });
+    receivedDataSubscription =
+        nearbyService.dataReceivedSubscription(callback: (data) {
+      // await Future.delayed(const Duration(milliseconds: 10));
+      final parts = parseMessageType(data['message']);
+      performAction(parts[0], parts[1], data['senderDeviceId']);
     });
   }
 
