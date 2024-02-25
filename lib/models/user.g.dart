@@ -22,14 +22,13 @@ class UserAdapter extends TypeAdapter<User> {
       avatar: fields[2] as String?,
       introduction: fields[3] as String?,
       language: fields[4] as String?,
-      status: fields[5] == null ? Status.disconnected : fields[5] as Status?,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -39,9 +38,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.introduction)
       ..writeByte(4)
-      ..write(obj.language)
-      ..writeByte(5)
-      ..write(obj.status);
+      ..write(obj.language);
   }
 
   @override

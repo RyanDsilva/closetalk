@@ -95,26 +95,20 @@ class Chats extends StatefulWidget {
 class _ChatsState extends State<Chats> {
   final messageController = TextEditingController();
   final ChatController chatController = Get.find<ChatController>();
+  final UserController userController = Get.find<UserController>();
   final NearbyServiceController nearbyServiceController =
       Get.find<NearbyServiceController>();
-  late StreamSubscription receivedDataSubscription;
 
   @override
   void initState() {
     super.initState();
-    receivedDataSubscription = nearbyServiceController.nearbyService
-        .dataReceivedSubscription(callback: (data) {
-      debugPrint(data.toString());
-      // final parts = parseMessageType(data['message']);
-      // performAction(parts[0], parts[1], data['reciever']);
-    });
   }
 
   Future<void> sendMessage() async {
-    debugPrint('test');
     await chatController.sendMessage(
       messageController.text,
       widget.chatId,
+      userController.currentUser.value,
       'IND',
       nearbyServiceController.nearbyService,
     );
@@ -135,12 +129,14 @@ class _ChatsState extends State<Chats> {
               builder: (_) {
                 return GetX<ChatController>(
                   builder: (chatController) {
-                    final chat = chatController.chats[widget.chatId];
+                    // Chat? chat = chatController.chats[widget.chatId];
                     return ListView.builder(
-                      itemCount: chat?.messages?.length,
+                      itemCount:
+                          chatController.chats[widget.chatId]?.messages?.length,
                       itemBuilder: (context, index) {
                         return ChatBubble(
-                          message: chat!.messages![index],
+                          message:
+                              chatController.chats[widget.chatId]!.messages![index],
                           currentUserId: widget.currentUserId,
                         );
                       },
@@ -198,16 +194,16 @@ class ChatBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMe = message.owner?.id == currentUserId;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           isMe
               ? Expanded(child: Container()) // Empty container for alignment
-              : CircleAvatar(
-                  child: Text(
-                    message.text ?? '',
-                  ),
+              : RandomAvatar(
+                  height: 36,
+                  width: 36,
+                  message.owner?.avatar ?? 'random',
                 ),
           const SizedBox(width: 8.0),
           Column(
@@ -216,7 +212,10 @@ class ChatBubble extends StatelessWidget {
             children: [
               Text(
                 message.owner?.name ?? '',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 12,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(8.0),
@@ -235,8 +234,10 @@ class ChatBubble extends StatelessWidget {
           ),
           const SizedBox(width: 8.0),
           isMe
-              ? CircleAvatar(
-                  child: Text(message.owner?.name ?? ''),
+              ? RandomAvatar(
+                  height: 36,
+                  width: 36,
+                  message.owner?.avatar ?? 'random',
                 )
               : Expanded(
                   child: Container(),

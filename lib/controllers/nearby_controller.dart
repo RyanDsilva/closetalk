@@ -56,7 +56,8 @@ class NearbyServiceController extends GetxController {
     nearbyService = NearbyService();
     String deviceID = '';
     deviceID = await getDeviceInfo();
-    final deviceName = '$deviceID:${currentUser.name}:${currentUser.avatar}';
+    final deviceName =
+        '$deviceID//${currentUser.name}//${currentUser.introduction}//${currentUser.avatar}';
     await nearbyService.init(
       serviceType: 'closetalk',
       deviceName: deviceName,
@@ -88,10 +89,10 @@ class NearbyServiceController extends GetxController {
       devices.clear();
       devices.addAll(devicesList);
       receivedDataSubscription =
-          nearbyService.dataReceivedSubscription(callback: (data) {
+          nearbyService.dataReceivedSubscription(callback: (data) async {
         debugPrint(data.toString());
         final parts = parseMessageType(data['message']);
-        performAction(parts[0], parts[1], data['reciever']);
+        await performAction(parts[0], parts[1], data['senderDeviceId']);
       });
       update();
     });
@@ -102,7 +103,16 @@ class NearbyServiceController extends GetxController {
     return parts;
   }
 
-  void performAction(String type, String message, String senderId) {}
+  Future<void> performAction(String type, String message, String senderId) async {
+    switch (type) {
+      case 'IND':
+        User sender = parseUserInfo(senderId);
+        await chatController.addMessageToConversation(message, sender, senderId);
+        break;
+      default:
+        debugPrint('Invalid Type');
+    }
+  }
 
   Future<void> disposeResources() async {
     // receivedDataSubscription.cancel();

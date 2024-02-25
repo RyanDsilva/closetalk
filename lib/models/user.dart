@@ -30,8 +30,8 @@ class User extends HiveObject {
   @HiveField(4)
   String? language;
 
-  @HiveField(5, defaultValue: Status.disconnected)
-  Status? status;
+  // @HiveField(5, defaultValue: Status.disconnected)
+  // Status? status;
 
   User({
     this.id,
@@ -39,7 +39,7 @@ class User extends HiveObject {
     this.avatar,
     this.introduction,
     this.language,
-    this.status,
+    // this.status,
   });
 
   User copyWith({
@@ -56,15 +56,15 @@ class User extends HiveObject {
       avatar: avatar ?? this.avatar,
       introduction: introduction ?? this.introduction,
       language: language ?? this.language,
-      status: status ?? this.status,
+      // status: status ?? this.status,
     );
   }
 
-  static Status _getStatusFromString(String statusString) {
-    return statusString == 'Status.connected'
-        ? Status.connected
-        : Status.disconnected;
-  }
+  // static Status _getStatusFromString(String statusString) {
+  //   return statusString == 'Status.connected'
+  //       ? Status.connected
+  //       : Status.disconnected;
+  // }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -73,7 +73,7 @@ class User extends HiveObject {
       'avatar': avatar,
       'introduction': introduction,
       'language': language,
-      'status': status.toString(),
+      // 'status': status.toString(),
     };
   }
 
@@ -85,7 +85,7 @@ class User extends HiveObject {
       introduction:
           map['introduction'] != null ? map['introduction'] as String : null,
       language: map['language'] != null ? map['language'] as String : null,
-      status: _getStatusFromString(map['status'] as String),
+      // status: _getStatusFromString(map['status'] as String),
     );
   }
 
@@ -96,7 +96,7 @@ class User extends HiveObject {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, avatar: $avatar, introduction: $introduction, language: $language, status: $status)';
+    return 'User(id: $id, name: $name, avatar: $avatar, introduction: $introduction, language: $language)';
   }
 
   @override
@@ -107,8 +107,8 @@ class User extends HiveObject {
         other.name == name &&
         other.avatar == avatar &&
         other.introduction == introduction &&
-        other.language == language &&
-        other.status == status;
+        other.language == language;
+    // other.status == status;
   }
 
   @override
@@ -117,7 +117,7 @@ class User extends HiveObject {
         name.hashCode ^
         avatar.hashCode ^
         introduction.hashCode ^
-        language.hashCode ^
-        status.hashCode;
+        language.hashCode;
+    // status.hashCode;
   }
 }

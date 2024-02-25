@@ -1,3 +1,4 @@
+import 'package:closetalk/models/chat_message.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -35,13 +36,21 @@ class ChatController extends GetxController {
   Future<void> sendMessage(
     String message,
     String recipientId,
+    User owner,
     String type,
     NearbyService nearbyService,
   ) async {
     final content = '$type://$message';
     await nearbyService.sendMessage(recipientId, content);
-    addMessageToConversation(message, recipientId);
+    await addMessageToConversation(message, owner, recipientId);
   }
 
-  void addMessageToConversation(String message, String chatId) {}
+  Future<void> addMessageToConversation(
+      String message, User owner, String chatId) async {
+    final chat = chats[chatId];
+    final m = ChatMessage(text: message, owner: owner);
+    chat?.messages?.add(m);
+    update();
+    await db.put(chatId, chat!);
+  }
 }

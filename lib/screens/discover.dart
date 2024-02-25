@@ -30,7 +30,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   void dispose() {
-    nearbyServiceController.disposeResources();
+    // nearbyServiceController.disposeResources();
     super.dispose();
   }
 

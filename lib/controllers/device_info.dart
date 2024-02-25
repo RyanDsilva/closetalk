@@ -16,13 +16,13 @@ Future<String> getDeviceInfo() async {
   return deviceID;
 }
 
-// final deviceName = '$deviceID:${currentUser.name}:${currentUser.avatar}';
+// final deviceName = '$deviceID:${currentUser.name}//${currentUser.introduction}//${currentUser.avatar}';
 User parseUserInfo(String deviceName) {
-  List<String> values = deviceName.split(':');
+  List<String> values = deviceName.split('//');
   return User(
     id: deviceName,
     name: values[1],
-    introduction: '',
-    avatar: values[2],
+    introduction: values[2],
+    avatar: values[3],
   );
 }
