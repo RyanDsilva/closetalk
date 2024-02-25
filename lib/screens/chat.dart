@@ -184,6 +184,7 @@ class ChatBubble extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(width: 8.0),
           isMe
               ? CircleAvatar(
                   child: Text(message.sender[0]),
