@@ -9,10 +9,11 @@ class UserController extends GetxController {
   var isCurrentUserSet = false.obs;
   Box<User> db = Hive.box('user');
 
-  void updateUser(User user) {
+  Future<void> updateUser(User user) async {
     currentUser.value = user;
     isCurrentUserSet.value = true;
-    db.put('currentUser', user);
+    await db.put('currentUser', user);
     debugPrint(user.toString());
+    update();
   }
 }

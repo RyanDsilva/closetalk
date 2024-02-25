@@ -1,3 +1,4 @@
+import 'package:closetalk/models/user.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 
@@ -13,4 +14,15 @@ Future<String> getDeviceInfo() async {
     deviceID = iosInfo.utsname.machine;
   }
   return deviceID;
+}
+
+// final deviceName = '$deviceID//${currentUser.name}//${currentUser.introduction}//${currentUser.avatar}';
+User parseUserInfo(String deviceName) {
+  List<String> values = deviceName.split('//');
+  return User(
+    id: values[0],
+    name: values[1],
+    introduction: values[2],
+    avatar: values[3],
+  );
 }
