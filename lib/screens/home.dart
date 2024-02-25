@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:closetalk/controllers/notification_controller.dart';
+import 'package:closetalk/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,19 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Get.offAndToNamed('/profile');
           }
         },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: const BoxDecoration(color: Colors.greenAccent),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: const Center(
-                child: Text('Home'),
-              ),
-            ),
-          ],
-        ),
+        child: HomeUI()
       ),
     );
   }
