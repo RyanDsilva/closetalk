@@ -136,15 +136,6 @@ class _FormComponentState extends State<FormComponent> {
                 )
               ],
             ),
-            // TextButton(
-            //   onPressed: () => _changeAvatar(context),
-            //   child: const Text(
-            //     'Change Avatar',
-            //     style: TextStyle(
-            //       color: apnaMaroon,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
         TextFormField(
