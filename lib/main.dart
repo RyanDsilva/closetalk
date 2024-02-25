@@ -8,7 +8,7 @@ import 'package:closetalk/screens/chat.dart';
 import 'package:closetalk/screens/discover.dart';
 import 'package:closetalk/screens/global_chat.dart';
 import 'package:closetalk/screens/home.dart';
-import 'package:closetalk/screens/profile.dart';
+import 'package:closetalk/screens/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -45,7 +45,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/profile',
       getPages: [
         GetPage(
           name: '/',
