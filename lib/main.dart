@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:closetalk/constants/colors.dart';
+import 'package:closetalk/controllers/chat_controller.dart';
 import 'package:closetalk/controllers/user_controller.dart';
 import 'package:closetalk/models/chat.dart';
 import 'package:closetalk/models/chat_message.dart';
@@ -45,6 +46,7 @@ void main() async {
   await Hive.openBox<Chat>('chats');
   await Hive.openBox<GroupChat>('group_chats');
   final userController = Get.put<UserController>(UserController());
+  final _ = Get.put<ChatController>(ChatController());
   debugPrint(userController.currentUser.value.toString());
   runApp(
     GetMaterialApp(

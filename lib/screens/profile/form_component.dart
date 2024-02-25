@@ -68,6 +68,13 @@ class _FormComponentState extends State<FormComponent> {
     );
   }
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    introductionController.dispose();
+    super.dispose();
+  }
+
   Future<void> saveUser() async {
     final String deviceID = await getDeviceInfo();
     final User user = User(
@@ -77,7 +84,7 @@ class _FormComponentState extends State<FormComponent> {
       introduction: introductionController.text,
       language: selectedLang,
     );
-    userController.updateUser(user);
+    await userController.updateUser(user);
   }
 
   @override
@@ -104,6 +111,7 @@ class _FormComponentState extends State<FormComponent> {
           ],
         ),
         TextFormField(
+          controller: nameController,
           decoration: InputDecoration(
             // errorText: _validate ? "Value Can't Be Empty" : null,
             isDense: true,
@@ -116,6 +124,7 @@ class _FormComponentState extends State<FormComponent> {
         ),
         const SizedBox(height: 10),
         TextFormField(
+          controller: introductionController,
           decoration: InputDecoration(
             // errorText: _validate ? "Value Can't Be Empty" : null,
             isDense: true,
@@ -154,7 +163,7 @@ class _FormComponentState extends State<FormComponent> {
             //   });
             // } else {
             await saveUser();
-            Get.toNamed('/');
+            Get.offAllNamed('/');
             // }
           },
           child: const Text(

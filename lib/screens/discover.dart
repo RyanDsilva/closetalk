@@ -1,8 +1,6 @@
-import 'dart:async';
-
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:closetalk/constants/colors.dart';
 import 'package:closetalk/constants/icebreakers.dart';
+import 'package:closetalk/controllers/chat_controller.dart';
 import 'package:closetalk/controllers/nearby_controller.dart';
 import 'package:easy_animate/animation/pulse_animation.dart';
 import 'package:easy_animate/enum/animate_type.dart';
@@ -11,6 +9,7 @@ import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 import 'package:get/get.dart';
 import 'package:marquee/marquee.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -20,11 +19,9 @@ class DiscoverScreen extends StatefulWidget {
 }
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
-  List<Device> devices = [];
-  List<Device> connectedDevices = [];
-  late StreamSubscription subscription;
   final nearbyServiceController =
       Get.put<NearbyServiceController>(NearbyServiceController());
+  final chatController = Get.find<ChatController>();
 
   @override
   void initState() {
@@ -35,59 +32,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   void dispose() {
     nearbyServiceController.disposeResources();
-    subscription.cancel();
     super.dispose();
-  }
-
-  void triggerNotificationAndCreateUsers(
-      List<Device> oldState, List<Device> newState) {
-    for (Device oldDevice in oldState) {
-      Device? newDevice = newState
-          .firstWhereOrNull((device) => device.deviceId == oldDevice.deviceId);
-      if (newDevice != null) {
-        if ((oldDevice.state == SessionState.notConnected ||
-                oldDevice.state == SessionState.connecting) &&
-            newDevice.state == SessionState.connected) {
-          debugPrint('Reached Notifications!');
-          AwesomeNotifications().createNotification(
-              content: NotificationContent(
-            id: 10,
-            channelKey: 'basic_channel',
-            actionType: ActionType.Default,
-            title: 'You are now connected!',
-            body: 'You and ${newDevice.deviceName} are now connected.',
-          ));
-          // TODO: Create User Chats
-        }
-      }
-    }
   }
 
   void init() async {
     await nearbyServiceController.initializeNearby();
-    subscription = nearbyServiceController.nearbyService.stateChangedSubscription(
-        callback: (devicesList) {
-      for (var element in devicesList) {
-        debugPrint(
-          " deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}",
-        );
-        if (GetPlatform.isAndroid) {
-          if (element.state == SessionState.connected) {
-            nearbyServiceController.nearbyService.stopBrowsingForPeers();
-          } else {
-            nearbyServiceController.nearbyService.startBrowsingForPeers();
-          }
-        }
-      }
-      triggerNotificationAndCreateUsers(devices, devicesList);
-      setState(() {
-        devices.clear();
-        devices.addAll(devicesList);
-        connectedDevices.clear();
-        connectedDevices.addAll(
-            devicesList.where((d) => d.state == SessionState.connected).toList());
-      });
-    });
   }
 
   void _connectToPeer(Device device) {
@@ -108,7 +57,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final userController = Get.put(UserController());
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -170,44 +118,51 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     }
                   }),
                 ),
-                Center(
-                  child: Scatter(
-                    fillGaps: true,
-                    delegate: FermatSpiralScatterDelegate(ratio: 3.5, a: 1, b: 20),
-                    children: List.generate(devices.length, (index) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          PulseAnimation(
-                            animateType: AnimateType.loop,
-                            child: Container(
-                              width: 75,
-                              height: 75,
-                              decoration: const BoxDecoration(
-                                color: apnaMaroon,
-                                shape: BoxShape.circle,
+                GetX<NearbyServiceController>(
+                  builder: (_) {
+                    final users = _.devicesToUsers(nearbyServiceController.devices);
+                    final devices = _.devices;
+                    debugPrint(devices.toString());
+                    return Center(
+                      child: Scatter(
+                        fillGaps: true,
+                        delegate:
+                            FermatSpiralScatterDelegate(ratio: 3.5, a: 1, b: 20),
+                        children: List.generate(users.length, (index) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              PulseAnimation(
+                                animateType: AnimateType.loop,
+                                child: SizedBox(
+                                  width: 75,
+                                  height: 75,
+                                  child: GestureDetector(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: RandomAvatar(users[index].avatar ??
+                                          DateTime.now().toIso8601String()),
+                                    ),
+                                    onTap: () {
+                                      _connectToPeer(devices[index]);
+                                    },
+                                  ),
+                                ),
                               ),
-                              child: InkWell(
-                                customBorder: const CircleBorder(),
-                                splashColor: apnaMaroon,
-                                onTap: () {
-                                  _connectToPeer(devices[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                          Text(
-                            devices[index].deviceName,
-                            style: const TextStyle(
-                              color: apnaMaroon,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
-                      );
-                    }),
-                  ),
+                              Text(
+                                users[index].name ?? 'Unknown',
+                                style: const TextStyle(
+                                  color: apnaMaroon,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          );
+                        }),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
