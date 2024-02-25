@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:closetalk/constants/colors.dart';
 import 'package:closetalk/constants/icebreakers.dart';
 import 'package:closetalk/controllers/nearby_controller.dart';
+import 'package:easy_animate/animation/pulse_animation.dart';
+import 'package:easy_animate/enum/animate_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
@@ -36,6 +39,30 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     super.dispose();
   }
 
+  void triggerNotificationAndCreateUsers(
+      List<Device> oldState, List<Device> newState) {
+    for (Device oldDevice in oldState) {
+      Device? newDevice = newState
+          .firstWhereOrNull((device) => device.deviceId == oldDevice.deviceId);
+      if (newDevice != null) {
+        if ((oldDevice.state == SessionState.notConnected ||
+                oldDevice.state == SessionState.connecting) &&
+            newDevice.state == SessionState.connected) {
+          debugPrint('Reached Notifications!');
+          AwesomeNotifications().createNotification(
+              content: NotificationContent(
+            id: 10,
+            channelKey: 'basic_channel',
+            actionType: ActionType.Default,
+            title: 'You are now connected!',
+            body: 'You and ${newDevice.deviceName} are now connected.',
+          ));
+          // TODO: Create User Chats
+        }
+      }
+    }
+  }
+
   void init() async {
     await nearbyServiceController.initializeNearby();
     subscription = nearbyServiceController.nearbyService.stateChangedSubscription(
@@ -52,6 +79,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           }
         }
       }
+      triggerNotificationAndCreateUsers(devices, devicesList);
       setState(() {
         devices.clear();
         devices.addAll(devicesList);
@@ -62,12 +90,29 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     });
   }
 
+  void _connectToPeer(Device device) {
+    switch (device.state) {
+      case SessionState.notConnected:
+        nearbyServiceController.nearbyService.invitePeer(
+          deviceID: device.deviceId,
+          deviceName: device.deviceName,
+        );
+        debugPrint('Connected!');
+        break;
+      case SessionState.connected:
+        break;
+      case SessionState.connecting:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // final userController = Get.put(UserController());
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        backgroundColor: apnaWhite,
         key: const Key('discover'),
         body: GestureDetector(
           onHorizontalDragUpdate: (details) {
@@ -92,7 +137,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w200,
                             fontSize: 18,
-                            color: apnaBlack.withOpacity(0.25),
+                            color: apnaBlack.withOpacity(0.35),
                           ),
                           scrollAxis: Axis.horizontal,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +156,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.w200,
                             fontSize: 18,
-                            color: apnaBlack.withOpacity(0.25),
+                            color: apnaBlack.withOpacity(0.35),
                           ),
                           textDirection: TextDirection.rtl,
                           scrollAxis: Axis.horizontal,
@@ -129,21 +174,37 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   child: Scatter(
                     fillGaps: true,
                     delegate: FermatSpiralScatterDelegate(ratio: 3.5, a: 1, b: 20),
-                    children: List.generate(5, (index) {
-                      return Container(
-                        width: 75,
-                        height: 75,
-                        decoration: const BoxDecoration(
-                          color: apnaMaroon,
-                          shape: BoxShape.circle,
-                        ),
-                        child: InkWell(
-                          customBorder: const CircleBorder(),
-                          splashColor: apnaMaroon,
-                          onTap: () {
-                            debugPrint("Circle Tapped");
-                          },
-                        ),
+                    children: List.generate(devices.length, (index) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PulseAnimation(
+                            animateType: AnimateType.loop,
+                            child: Container(
+                              width: 75,
+                              height: 75,
+                              decoration: const BoxDecoration(
+                                color: apnaMaroon,
+                                shape: BoxShape.circle,
+                              ),
+                              child: InkWell(
+                                customBorder: const CircleBorder(),
+                                splashColor: apnaMaroon,
+                                onTap: () {
+                                  _connectToPeer(devices[index]);
+                                },
+                              ),
+                            ),
+                          ),
+                          Text(
+                            devices[index].deviceName,
+                            style: const TextStyle(
+                              color: apnaMaroon,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
                       );
                     }),
                   ),

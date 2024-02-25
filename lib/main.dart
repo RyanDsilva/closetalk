@@ -1,3 +1,5 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:closetalk/constants/colors.dart';
 import 'package:closetalk/models/chat.dart';
 import 'package:closetalk/models/chat_message.dart';
 import 'package:closetalk/models/group_chat.dart';
@@ -12,6 +14,26 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
+  AwesomeNotifications().initialize(
+    // set the icon to null if you want to use the default app icon
+    'resource://mipmap/ic_launcher',
+    [
+      NotificationChannel(
+        channelGroupKey: 'basic_channel_group',
+        channelKey: 'basic_channel',
+        channelName: 'Basic Notifications',
+        channelDescription: 'CloseTalk Notifications',
+        defaultColor: apnaMaroon,
+        ledColor: apnaWhite,
+      )
+    ],
+    // Channel groups are only visual and are not required
+    channelGroups: [
+      NotificationChannelGroup(
+          channelGroupKey: 'basic_channel_group', channelGroupName: 'Basic Group')
+    ],
+    debug: true,
+  );
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(ChatMessageAdapter());
@@ -23,7 +45,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/discover',
+      initialRoute: '/',
       getPages: [
         GetPage(
           name: '/',
