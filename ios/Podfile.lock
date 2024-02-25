@@ -7,8 +7,6 @@ PODS:
   - flutter_nearby_connections (0.0.1):
     - Flutter
     - SwiftyJSON (~> 4.0)
-  - isar_flutter_libs (1.0.0):
-    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -19,7 +17,6 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_nearby_connections (from `.symlinks/plugins/flutter_nearby_connections/ios`)
-  - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 
 SPEC REPOS:
@@ -35,8 +32,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_nearby_connections:
     :path: ".symlinks/plugins/flutter_nearby_connections/ios"
-  isar_flutter_libs:
-    :path: ".symlinks/plugins/isar_flutter_libs/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
@@ -45,7 +40,6 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_nearby_connections: 68c6cb88dcbf781e74adac01f4e93b853a30ee34
-  isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
