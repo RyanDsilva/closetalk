@@ -14,9 +14,9 @@ class NearbyServiceController extends GetxController {
   var devices = <Device>[].obs;
   late NearbyService nearbyService;
   late StreamSubscription subscription;
-  // late StreamSubscription receivedDataSubscription;
-  final UserController userController = Get.put(UserController());
-  final ChatController chatController = Get.put(ChatController());
+  late StreamSubscription receivedDataSubscription;
+  final UserController userController = Get.find<UserController>();
+  final ChatController chatController = Get.find<ChatController>();
 
   void triggerNotificationAndCreateUsers(
       List<Device> oldState, List<Device> newState) {
@@ -56,8 +56,7 @@ class NearbyServiceController extends GetxController {
     nearbyService = NearbyService();
     String deviceID = '';
     deviceID = await getDeviceInfo();
-    final deviceName =
-        '$deviceID//${currentUser.name}//${currentUser.introduction}//${currentUser.avatar}';
+    final deviceName = '$deviceID:${currentUser.name}:${currentUser.avatar}';
     await nearbyService.init(
       serviceType: 'closetalk',
       deviceName: deviceName,
@@ -88,9 +87,22 @@ class NearbyServiceController extends GetxController {
       triggerNotificationAndCreateUsers(devices, devicesList);
       devices.clear();
       devices.addAll(devicesList);
+      receivedDataSubscription =
+          nearbyService.dataReceivedSubscription(callback: (data) {
+        debugPrint(data.toString());
+        final parts = parseMessageType(data['message']);
+        performAction(parts[0], parts[1], data['reciever']);
+      });
       update();
     });
   }
+
+  List<String> parseMessageType(String message) {
+    List<String> parts = message.split('://');
+    return parts;
+  }
+
+  void performAction(String type, String message, String senderId) {}
 
   Future<void> disposeResources() async {
     // receivedDataSubscription.cancel();

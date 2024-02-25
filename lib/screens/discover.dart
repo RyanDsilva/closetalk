@@ -19,8 +19,7 @@ class DiscoverScreen extends StatefulWidget {
 }
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
-  final nearbyServiceController =
-      Get.put<NearbyServiceController>(NearbyServiceController());
+  final nearbyServiceController = Get.find<NearbyServiceController>();
   final chatController = Get.find<ChatController>();
 
   @override
@@ -122,7 +121,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   builder: (_) {
                     final users = _.devicesToUsers(nearbyServiceController.devices);
                     final devices = _.devices;
-                    debugPrint(devices.toString());
                     return Center(
                       child: Scatter(
                         fillGaps: true,
@@ -145,6 +143,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                     ),
                                     onTap: () {
                                       _connectToPeer(devices[index]);
+                                      Get.offAndToNamed('/');
                                     },
                                   ),
                                 ),

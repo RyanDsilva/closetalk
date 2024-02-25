@@ -31,7 +31,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Image.asset(
-                  "assets/images/placeholder.png"), // Ensure this path is correct as per your pubspec.yaml
+                width: 200,
+                height: 200,
+                "assets/images/icon.png",
+              ), // Ensure this path is correct as per your pubspec.yaml
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(

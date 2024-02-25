@@ -1,42 +1,33 @@
-import 'package:closetalk/controllers/user_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'dart:async';
 
 import 'package:closetalk/constants/colors.dart';
+import 'package:closetalk/controllers/chat_controller.dart';
+import 'package:closetalk/controllers/nearby_controller.dart';
+import 'package:closetalk/models/chat_message.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:random_avatar/random_avatar.dart';
 
-class ChatScreen extends StatelessWidget {
+import '../controllers/user_controller.dart';
+import '../models/chat.dart';
+
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    //final userController = Get.put(UserController());
-    return const MaterialApp(
-      key: Key('chat'),
-      home: ChatPage(), //Obx(
-      //() => Text(userController.currentUser.value.name ?? 'test'),
-      //     Container(
-      //   decoration: const BoxDecoration(
-      //     color: apnaWhite),
-      // ),
-    );
-  }
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class _ChatScreenState extends State<ChatScreen> {
+  final userController = Get.find<UserController>();
+  final Chat chat = Get.arguments;
 
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: apnaMaroon,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
           decoration: const BoxDecoration(
             color: apnaMaroon,
@@ -49,81 +40,140 @@ class _ChatPageState extends State<ChatPage> {
             backgroundColor:
                 Colors.transparent, // Make AppBar background transparent
             elevation: 0, // Removes shadow
-            leading: RandomAvatar("string1"), // Your leading widget
+            title: Column(
+              children: [
+                Text(
+                  chat.user?.name ?? '',
+                  style: const TextStyle(
+                    color: apnaWhite,
+                  ),
+                ),
+                Text(
+                  chat.user?.introduction ?? '',
+                  style: const TextStyle(
+                    color: apnaWhite,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RandomAvatar(
+                userController.currentUser.value.avatar ??
+                    DateTime.now().toIso8601String(),
+              ),
+            ), // Your leading widget
             // Uncomment title if you need it
             // title: const Text("Flutter app2"),
           ),
         ),
       ),
-      body: Chats(), // Your chats widget
+      body: Chats(
+        chatId: chat.user!.id!,
+        currentUserId: userController.currentUser.value.id!,
+      ), // Your chats widget
     );
   }
 }
 
-class Chats extends StatelessWidget {
+class Chats extends StatefulWidget {
   //const Chats({super.key});
+  final String chatId;
+  final String currentUserId;
 
-  // Dummy data for messages
-  final List<Message> messages = [
-    Message(sender: 'Me', text: 'Hi there!'),
-    Message(sender: 'Bob', text: 'Hello! How are you?'),
-    Message(sender: 'Me', text: 'I\'m good, thanks!'),
-    Message(sender: 'Bob', text: 'Great to hear!'),
-    Message(sender: 'Me', text: 'Hi there!'),
-    Message(sender: 'Bob', text: 'Hello! How are you?'),
-    Message(sender: 'Me', text: 'I\'m good, thanks!'),
-    Message(sender: 'Bob', text: 'Great to hear!'),
-    Message(sender: 'Me', text: 'Hi there!'),
-    Message(sender: 'Bob', text: 'Hello! How are you?'),
-    Message(sender: 'Me', text: 'I\'m good, thanks!'),
-    Message(sender: 'Bob', text: 'Great to hear!'),
-    Message(sender: 'Me', text: 'Hi there!'),
-    Message(sender: 'Bob', text: 'Hello! How are you?'),
-    Message(sender: 'Me', text: 'I\'m good, thanks!'),
-    Message(sender: 'Bob', text: 'Great to hear!'),
-    Message(sender: 'Me', text: 'Hi there!'),
-    Message(sender: 'Bob', text: 'Hello! How are you?'),
-    Message(sender: 'Me', text: 'I\'m good, thanks!'),
-    Message(sender: 'Bob', text: 'Great to hear!'),
-    // Add more messages as needed
-  ];
+  const Chats({
+    super.key,
+    required this.chatId,
+    required this.currentUserId,
+  });
+
+  @override
+  State<Chats> createState() => _ChatsState();
+}
+
+class _ChatsState extends State<Chats> {
+  final messageController = TextEditingController();
+  final ChatController chatController = Get.find<ChatController>();
+  final NearbyServiceController nearbyServiceController =
+      Get.find<NearbyServiceController>();
+  late StreamSubscription receivedDataSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    receivedDataSubscription = nearbyServiceController.nearbyService
+        .dataReceivedSubscription(callback: (data) {
+      debugPrint(data.toString());
+      // final parts = parseMessageType(data['message']);
+      // performAction(parts[0], parts[1], data['reciever']);
+    });
+  }
+
+  Future<void> sendMessage() async {
+    debugPrint('test');
+    await chatController.sendMessage(
+      messageController.text,
+      widget.chatId,
+      'IND',
+      nearbyServiceController.nearbyService,
+    );
+    messageController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromRGBO(236, 206, 222, 1),
+        color: const Color.fromRGBO(236, 206, 222, 1),
         borderRadius: BorderRadius.circular(20.0),
       ),
-      //body: Padding(
-      //padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return ChatBubble(message: messages[index]);
+            child: GetBuilder<NearbyServiceController>(
+              builder: (_) {
+                return GetX<ChatController>(
+                  builder: (chatController) {
+                    final chat = chatController.chats[widget.chatId];
+                    return ListView.builder(
+                      itemCount: chat?.messages?.length,
+                      itemBuilder: (context, index) {
+                        return ChatBubble(
+                          message: chat!.messages![index],
+                          currentUserId: widget.currentUserId,
+                        );
+                      },
+                    );
+                  },
+                );
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+              bottom: 35.0,
+              left: 12,
+              right: 12,
+            ),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Lets talk to get close...',
+                    controller: messageController,
+                    decoration: const InputDecoration(
+                      hintText: 'Send a message ...',
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    //sendMessage();
+                  onPressed: () async {
+                    await sendMessage();
                   },
-                  child: Text('CloseTalk icon'),
+                  child: const Icon(
+                    Icons.send,
+                  ),
                 ),
               ],
             ),
@@ -135,61 +185,62 @@ class Chats extends StatelessWidget {
   }
 }
 
-class Message {
-  final String sender;
-  final String text;
-
-  Message({required this.sender, required this.text});
-}
-
 class ChatBubble extends StatelessWidget {
-  final Message message;
-  ChatBubble({required this.message});
+  final ChatMessage message;
+  final String currentUserId;
+  const ChatBubble({
+    super.key,
+    required this.message,
+    required this.currentUserId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isMe = message.sender == 'Me';
-
+    final isMe = message.owner?.id == currentUserId;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           isMe
               ? Expanded(child: Container()) // Empty container for alignment
               : CircleAvatar(
-                  child: Text(message.sender[0]),
+                  child: Text(
+                    message.text ?? '',
+                  ),
                 ),
-          SizedBox(width: 8.0),
+          const SizedBox(width: 8.0),
           Column(
             crossAxisAlignment:
                 isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Text(
-                message.sender,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                message.owner?.name ?? '',
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: isMe
-                      ? Color.fromRGBO(223, 171, 195, 1)
-                      : Color.fromRGBO(180, 78, 126, 1),
+                      ? const Color.fromRGBO(223, 171, 195, 1)
+                      : const Color.fromRGBO(180, 78, 126, 1),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(
-                  message.text,
-                  style: TextStyle(color: Colors.white),
+                  message.text ?? '',
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],
           ),
-          SizedBox(width: 8.0),
+          const SizedBox(width: 8.0),
           isMe
               ? CircleAvatar(
-                  child: Text(message.sender[0]),
+                  child: Text(message.owner?.name ?? ''),
                 )
-              : Expanded(child: Container()), // Empty container for alignment
+              : Expanded(
+                  child: Container(),
+                ), // Empty container for alignment
         ],
       ),
     );

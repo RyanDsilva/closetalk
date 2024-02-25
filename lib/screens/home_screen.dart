@@ -27,7 +27,19 @@ class ChatScreenMain extends StatelessWidget {
       child: GetX<ChatController>(
         builder: (chatController) {
           if (chatController.chats.isEmpty) {
-            return const Text('Feels a little lonely here');
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: const Center(
+                child: Text(
+                  'Feels a little lonely here',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w200,
+                  ),
+                ),
+              ),
+            );
           }
           debugPrint(chatController.chats.toString());
           return ListView.builder(

@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:closetalk/constants/colors.dart';
 import 'package:closetalk/controllers/chat_controller.dart';
+import 'package:closetalk/controllers/nearby_controller.dart';
 import 'package:closetalk/controllers/user_controller.dart';
 import 'package:closetalk/models/chat.dart';
 import 'package:closetalk/models/chat_message.dart';
@@ -47,10 +48,12 @@ void main() async {
   await Hive.openBox<GroupChat>('group_chats');
   final userController = Get.put<UserController>(UserController());
   final _ = Get.put<ChatController>(ChatController());
+  final __ = Get.put<NearbyServiceController>(NearbyServiceController());
   debugPrint(userController.currentUser.value.toString());
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'OpenSans'),
       initialRoute: userController.isCurrentUserSet.value == true ? '/' : '/profile',
       getPages: [
         GetPage(

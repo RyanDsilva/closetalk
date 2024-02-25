@@ -7,8 +7,6 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
-  - flutter_native_splash (0.0.1):
-    - Flutter
   - flutter_nearby_connections (0.0.1):
     - Flutter
     - SwiftyJSON (~> 4.0)
@@ -23,7 +21,6 @@ DEPENDENCIES:
   - awesome_notifications_core (from `.symlinks/plugins/awesome_notifications_core/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
-  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_nearby_connections (from `.symlinks/plugins/flutter_nearby_connections/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 
@@ -41,8 +38,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
-  flutter_native_splash:
-    :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_nearby_connections:
     :path: ".symlinks/plugins/flutter_nearby_connections/ios"
   path_provider_foundation:
@@ -53,7 +48,6 @@ SPEC CHECKSUMS:
   awesome_notifications_core: d02eed89738fa362d56cbd372850e9adcd2c6bef
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_nearby_connections: 68c6cb88dcbf781e74adac01f4e93b853a30ee34
   IosAwnCore: 4691f457bd8dc9a3a0a941cee6439a894a0b81aa
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c

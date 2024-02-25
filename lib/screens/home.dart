@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Get.offAndToNamed('/profile');
           }
         },
-        child: ChatScreenMain(),
+        child: const ChatScreenMain(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
